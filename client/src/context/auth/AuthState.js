@@ -51,7 +51,6 @@ const AuthState = props =>{
 
             }
         }
-
         try {
             const response = await axios.post("/api/users", formData, config)
             dispatch({
@@ -66,12 +65,35 @@ const AuthState = props =>{
                 payload: error.response.data.msg
             })
         }
-       
     }
 
     // Login User
+    const login = async formData => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+        try {
+            const response = await axios.post("/api/auth", formData, config)
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: response.data
+            })
+            loadUser()
+        } catch (error) {
+            console.log(error.response.data);
+            dispatch({
+                type: LOGIN_FAIL,
+                payload: error.response.data.msg
+            })
+        }
+    }
 
     // Logout
+    const logout = () =>{
+        dispatch({type: LOGOUT})
+    }
 
     // clear errors
     const clearErrors = () => dispatch({type: CLEAR_ERRORS})
@@ -85,7 +107,9 @@ const AuthState = props =>{
             user: state.user,
             register,
             clearErrors,
-            loadUser
+            loadUser,
+            login,
+            logout
         }}>
             {props.children}
         </AuthContext.Provider>

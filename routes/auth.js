@@ -4,7 +4,7 @@ const {check, validationResult}  = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const auth = require('../middleware/auth')
-
+const config = require('config')
 const User = require('../models/User')
 
 router.get('/',auth, async (req, res)=>{
@@ -33,10 +33,10 @@ router.post('/',[
     try{
        
         let user = await User.findOne({email})
-        if(!user) return res.status(400).json({msg: "User doesn't exists."})
+        if(!user) return res.status(400).json({msg: "Invalid Credentials"})
 
         const isMatch = await bcrypt.compare(password, user.password) 
-        if(!isMatch) return res.status(400).json({msg: "Invalid Password"})
+        if(!isMatch) return res.status(400).json({msg: "Invalid Credentials"})
 
         const payload = {
             user: {
@@ -44,8 +44,8 @@ router.post('/',[
             }
         }
 
-        jwt.sign(payload, config.get('SECRET'), {
-            expiresIn: 36000
+        jwt.sign(payload, config.get('jwtsecret'), {
+            expiresIn: 360000
         }, (err, token)=>{
             if(err) throw err
             res.status(200).json({token})
