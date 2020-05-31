@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import ContactContext from '../../context/contact/contactContext'
-import { CLEAR_CURRENT } from '../../context/types'
+
 
 const ContactForm = () => {
     const contactContext = useContext(ContactContext)
@@ -39,6 +39,7 @@ const ContactForm = () => {
             updateContact(contact)
         }
         
+        clearAll()
         setContact({
             name: '',
             email: '',

@@ -4,12 +4,14 @@ const {check, validationResult}  = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
+const auth = require('../middleware/auth')
 
 const User = require('../models/User')
 
-router.get('/', (req, res)=>{
-    res.send("Get log in user")
+router.get('/',auth, (req, res)=>{
+    res.send(req.user)
 })
+
 
 router.post('/',[
     check('name', 'Please include name.').not().isEmpty(),
